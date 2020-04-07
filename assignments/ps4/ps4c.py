@@ -48,6 +48,38 @@ def is_word(word_list, word):
     word = word.strip(" !@#$%^&*()-_+={}[]|\:;'<>?,./\"")
     return word in word_list
 
+def get_permutations(sequence):
+    '''
+    Enumerate all permutations of a given string
+
+    sequence (string): an arbitrary string to permute. Assume that it is a
+    non-empty string.  
+
+    You MUST use recursion for this part. Non-recursive solutions will not be
+    accepted.
+
+    Returns: a list of all permutations of sequence
+
+    Example:
+    >>> get_permutations('abc')
+    ['abc', 'acb', 'bac', 'bca', 'cab', 'cba']
+
+    Note: depending on your implementation, you may return the permutations in
+    a different order than what is listed here.
+    '''
+    if len(sequence) == 1:
+        return [sequence]
+    first_letter = sequence[0]
+    other_letters = sequence[1:]
+    perm_other_letters = get_permutations(other_letters)
+    
+    perm = []
+    for i in range(len(sequence)):
+        for temp in perm_other_letters:
+            new_perm = temp[:i] + first_letter + temp[i:]
+            if new_perm not in perm:
+                perm.append(new_perm)
+    return perm
 
 ### END HELPER CODE ###
 
@@ -70,7 +102,8 @@ class SubMessage(object):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        self.message_text = text
+        self.valid_words = load_words(WORDLIST_FILENAME)
     
     def get_message_text(self):
         '''
@@ -78,7 +111,7 @@ class SubMessage(object):
         
         Returns: self.message_text
         '''
-        pass #delete this line and replace with your code here
+        return self.message_text
 
     def get_valid_words(self):
         '''
@@ -87,7 +120,7 @@ class SubMessage(object):
         
         Returns: a COPY of self.valid_words
         '''
-        pass #delete this line and replace with your code here
+        return self.get_valid_words.copy()
                 
     def build_transpose_dict(self, vowels_permutation):
         '''
@@ -108,8 +141,24 @@ class SubMessage(object):
         Returns: a dictionary mapping a letter (string) to 
                  another letter (string). 
         '''
+        vowels = 'aeiou'
+        dict = {}
+        for i in range(5):
+            dict[vowels[i]] = vowels_permutation[i]
+            dict[vowels[i].upper()] = vowels_permutation[i].upper()
         
-        pass #delete this line and replace with your code here
+        letters = string.ascii_lowercase
+        consonants = ''
+        for i in letters:
+            if i not in vowels:
+                consonants += i
+            
+        for i in range(len(consonants)):
+            dict[consonants[i]] = consonants[i]
+            dict[consonants[i].upper()] = consonants[i].upper()
+        return dict
+        
+        
     
     def apply_transpose(self, transpose_dict):
         '''
@@ -118,8 +167,16 @@ class SubMessage(object):
         Returns: an encrypted version of the message text, based 
         on the dictionary
         '''
-        
-        pass #delete this line and replace with your code here
+        text = self.get_message_text()
+        vowels = 'aeiou'
+        encrypted = ""
+        for i in text:
+            if i in transpose_dict:
+                encrypted += transpose_dict[i]
+            else:
+                encrypted += i
+        return encrypted
+
         
 class EncryptedSubMessage(SubMessage):
     def __init__(self, text):
@@ -132,7 +189,8 @@ class EncryptedSubMessage(SubMessage):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        SubMessage.__init__(self, text)
+        
 
     def decrypt_message(self):
         '''
@@ -152,7 +210,20 @@ class EncryptedSubMessage(SubMessage):
         
         Hint: use your function from Part 4A
         '''
-        pass #delete this line and replace with your code here
+        vowels = 'aeiou'
+        perms = get_permutations(vowels)
+        valid_words = {}
+        decry_message = {}
+        
+        for perm in perms:
+            tranpose_dict = self.build_transpose_dict(perm)
+            decrypted = self.apply_transpose(tranpose_dict)
+            words = decrypted.split(' ')
+            decry_message[perm] = decrypted
+            for word in words:
+                 valid_words[perm] = valid_words.get(perm, 0) + is_word(self.valid_words, word)
+        best = max(valid_words, key = valid_words.get)
+        return decry_message[best]
     
 
 if __name__ == '__main__':
@@ -168,3 +239,12 @@ if __name__ == '__main__':
     print("Decrypted message:", enc_message.decrypt_message())
      
     #TODO: WRITE YOUR TEST CASES HERE
+    message = SubMessage("Excuse me, sir. I need to go to the toilet.")
+    permutation = "uiaeo"
+    enc_dict = message.build_transpose_dict(permutation)
+    print("Original message:", message.get_message_text(), "Permutation:", permutation)
+    print("Expected encryption:", "Ixcosi mi, sar. A niid te ge te thi tealit.")
+    print("Actual encryption:", message.apply_transpose(enc_dict))
+    enc_message = EncryptedSubMessage(message.apply_transpose(enc_dict))
+    print("Decrypted message:", enc_message.decrypt_message())
+    
