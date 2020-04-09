@@ -70,7 +70,6 @@ def merge_sort(L):
         return merge(left, right)
         
 testList = [1,3,5,7,2,6,25,18,13]
-
-#print('')
-#print(merge_sort(testList))
+print('')
+print(merge_sort(testList))
 
