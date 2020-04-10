@@ -10,5 +10,5 @@ MIT 6.0001 Introduction to Computer Science and Programming in Python
   * [My personal notes on the course](https://github.com/vaccineaftsex/MIT6.0001/tree/master/My%20notes)
     * the "python basics" file includes not only the course contents, but also (largely) my notes on phython official documentations.
   * [My attempt on the problem sets (all tested)](https://github.com/vaccineaftsex/MIT6.0001/tree/master/assignments)
-    * ps0 and ps2 are not attempted because I anticipate no problem with them
-    * Noted that when I run ps5 on my computer, it does not work. Problems occur in the helper code provided by the course instructor, and I have no idea how to resolve them at this stage. However, the parts that I am supposed to do as assignments passed through unit testing.
+    * ps0 and ps2 were not attempted because I anticipated no problem with them
+    * Noted that when I run ps5 on my computer, it did not work. Problems occured in the helper code provided by the course instructor, and I had no idea how to resolve them at this stage. However, the parts that I was supposed to do as assignments passed through unit testing.
